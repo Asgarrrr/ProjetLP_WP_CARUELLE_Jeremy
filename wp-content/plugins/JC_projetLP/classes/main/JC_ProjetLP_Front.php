@@ -1,6 +1,6 @@
 <?php
 
-class ProjetLP_Front {
+class JC_ProjetLP_Front {
 
     public function __construct() {
 

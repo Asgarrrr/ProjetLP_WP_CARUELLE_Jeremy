@@ -24,14 +24,10 @@ foreach ( glob( PROJETLP_DIR ."/classes/*/*.php" ) as $filename )
         if ( !@require_once $filename )
             throw new Exception( sprintf( __( "Failed to include %s" ), $filename ) );
 
-
 // Activation hook
 register_activation_hook( PROJETLP_FILE, function() {
-    $ProjetLP_Install = new ProjetLP_Install();
+    $ProjetLP_Install = new JC_ProjetLP_Install();
     $ProjetLP_Install->setup();
 });
 
-if ( is_admin() )
-    new ProjetLP_Admin();
-else
-    new ProjetLP_Front();
+is_admin() ? new JC_ProjetLP_Admin() : new JC_ProjetLP_Front();
