@@ -1,0 +1,33 @@
+#register {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.float-right {
+    float: right;
+}
+
+#validate {
+    margin-top: 20px;
+    width: 100%;
+}
+
+#modal {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #0000004a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+#modal > div {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+}

@@ -5,21 +5,29 @@ class JC_ProjetLP_Admin {
     public function __construct() {
 
         add_action( 'admin_menu', array( $this, 'add_menu' ) );
-        wp_enqueue_script( 'projetlp-admin', plugins_url( '../assets/JS/JC_ProjetLP_Admin.js', dirname( __FILE__ ) ), array( 'jquery' ), '1.0.0', true );
-        wp_localize_script( 'projetlp-admin', 'projetlp_admin', array(
+        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+    }
+
+    public function enqueue_scripts() {
+
+        wp_enqueue_script( 'JC_ProjetLP_Admin', plugins_url( '../assets/JS/JC_ProjetLP_Admin.js', dirname( __FILE__ ) ), array( 'jquery' ), '1.0.0', true );
+        wp_enqueue_style( 'JC_ProjetLP_Admin', plugins_url( '../assets/CSS/JC_ProjetLP_Front.css', dirname( __FILE__ ) ), array(), '1.0.0', 'all' );
+        wp_localize_script( 'JC_ProjetLP_Admin', 'JC_ProjetLP_Admin', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ),
-            'nonce' => wp_create_nonce( 'projetlp_admin' )
+            'nonce' => wp_create_nonce( 'JC_ProjetLP_Admin' )
         ) );
+
     }
 
     public function add_menu() {
 
         add_menu_page(
-            __( 'ProjetLP', 'projetlp' ),
+            __( 'Configuration', 'projetlp' ),
             'Configuration',
             'manage_options',
             'projetlp',
-            array( $this, 'page' ),
+            array( $this, 'config' ),
             'dashicons-admin-generic',
             2
         );
@@ -41,6 +49,14 @@ class JC_ProjetLP_Admin {
             'projetlp-liste',
             array( $this, 'page' )
         );
+
+    }
+
+    public function config() {
+
+        $view = new JC_ProjetLP_ConfigView();
+
+        return false;
 
     }
 

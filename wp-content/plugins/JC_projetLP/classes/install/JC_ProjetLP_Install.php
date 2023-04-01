@@ -26,14 +26,10 @@ class JC_ProjetLP_Install {
         global $wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
-        $table_country_name = $wpdb->prefix . 'projetlp_country';
+        $table_country_name = $wpdb->prefix . 'jc_country';
 
-        if ( $this->tableAlreadyExists( $table_country_name ) ) {
-
+        if ( $this->tableAlreadyExists( $table_country_name ) )
             $wpdb->query( "DROP TABLE IF EXISTS $table_country_name" );
-
-        }
-
 
         if ( !$this->tableAlreadyExists( $table_country_name ) ) {
 
@@ -42,6 +38,7 @@ class JC_ProjetLP_Install {
                 countryNameFR   varchar(255)    NOT NULL,
                 notation        int(1)          NOT NULL DEFAULT 0,
                 majorOnly       int(1)          NOT NULL DEFAULT 0,
+                enabled         int(1)          NOT NULL DEFAULT 1,
                 PRIMARY KEY  (ISO)
             ) $charset_collate;";
 
@@ -308,7 +305,81 @@ class JC_ProjetLP_Install {
 
         }
 
+        // Check if the page already exists
+        $page = get_page_by_path( 'choix-voyage' );
 
+        if ( !$page ) {
+
+            // Define the page characteristics
+            $page = array(
+                'post_title' => 'Choix du voyage',
+                'post_name' => 'choix-voyage',
+                'post_content' => '[JC_ProjetLP_registerUser]',
+                'post_status' => 'publish',
+                'post_type' => 'page'
+            );
+
+            // Insert the page
+            $page_id = wp_insert_post( $page );
+
+            // Add the rewrite rule
+            add_rewrite_rule(
+                '^choix-voyage$',
+                'index.php?page_id=' . $page_id,
+                'top'
+            );
+
+        }
+
+        // Check if the page already exists
+        $parent_page = get_page_by_path( 'choix-voyage' );
+        if ( !$parent_page )
+            return;
+
+        $page = array(
+            'post_title' => 'Select',
+            'post_name' => 'select',
+            'post_content' => '[JC_ProjetLP_selectCountries]',
+            'post_status' => 'publish',
+            'post_type' => 'page',
+            'post_parent' => $parent_page->ID
+        );
+
+        // Insert the page
+        $page_id = wp_insert_post( $page );
+
+        // Add the rewrite rule
+        add_rewrite_rule(
+            '^choix-voyage/step/select$',
+            'index.php?page_id=' . $page_id,
+            'top'
+        );
+
+        // Check if the page already exists
+        $parent_page = get_page_by_path( 'choix-voyage' );
+        if ( !$parent_page ) {
+            return;
+        }
+
+        // Définir les informations de la nouvelle page
+        $page = array(
+            'post_title' => 'Récapitulatif',
+            'post_name' => 'final',
+            'post_content' => '[JS_ProjetLP_Shortcodes_Final]',
+            'post_status' => 'publish',
+            'post_type' => 'page',
+            'post_parent' => $parent_page->ID
+        );
+
+        // Insérer la nouvelle page dans WordPress
+        $page_id = wp_insert_post( $page );
+
+        // Ajouter une URL fixe pour la nouvelle page
+        add_rewrite_rule(
+            '^choix-voyage/step/final$',
+            'index.php?page_id=' . $page_id,
+            'top'
+        );
 
     }
 

@@ -7,7 +7,7 @@ if ( !class_exists( "WP_List_Table" ) ) {
 
 class JC_ProjetLP_CountryTable extends WP_List_Table {
 
-    public $_tableName = "projetlp_country";
+    public $_tableName = "jc_country";
     public $_screen;
 
     public function __construct( ) {
@@ -111,6 +111,19 @@ class JC_ProjetLP_CountryTable extends WP_List_Table {
 
     }
 
+    // Method for change background color of row if the country is major only
+    public function single_row( $item ) {
+
+        $class = $item['enabled'] == 0 ? 'disabled' : '';
+
+        echo '<tr class="' . $class . '">';
+
+        $this->single_row_columns( $item );
+
+        echo '</tr>';
+
+    }
+
     public function column_default( $item, $column_name ) {
 
         if(preg_match('/delete/i',$column_name))
@@ -126,28 +139,23 @@ class JC_ProjetLP_CountryTable extends WP_List_Table {
 
     }
 
-    private function getNotation($notation){
-        $notation = (int)$notation;
-        $notation = $notation > 5 ? 5 : $notation;
-        $notation = $notation < 1 ? 1 : $notation;
-        $notation = $notation == 0 ? 1 : $notation;
+    private function getNotation(int $notation){
 
         $html = '';
-        for($i = 1; $i <= 5; $i++){
+        for( $i = 0; $i <= 5; $i++ )
             $html .= sprintf( '<option value="%d" %s>%d</option>', $i, $notation == $i ? 'selected' : '', $i );
-        }
 
         return $html;
+
     }
 
-    private function getDelete($id){
-        if(!$id)
+    private function getDelete( $id ){
+
+        if( !$id )
             return;
+
         return sprintf( '<button id="%d" class="button-secondary button-small delbtn"><span class="dashicons dashicons-trash"></span></i></button>', $id );
 
     }
-
-
-
 
 }

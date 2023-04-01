@@ -9,9 +9,17 @@ class JC_ProjetLP_CountryListView {
             <div class="wrap">
                 <h1 class="wp-heading-inline"><?php print get_admin_page_title(); ?></h1>
                 <hr class="wp-header-end" />
+
                 <div class="notice notice-info notice-alt is-dismissible hide delete-confirmation">
                     <p><?php _e('Updated done!'); ?></p>
                 </div>
+
+                <div class="wrap">
+                    <form method="post" action="<?= plugins_url( PROJETLP_PLUGIN_NAME.'/classes/export/JC_ProjetLP_ExportXML.php' ); ?>">
+                        <input type="submit" class="button button-primary" value="Export CSV">
+                    </form>
+                </div>
+
                 <div class="wrap" id="list-table">
                     <form id="list-table-form" method="post">
                         <?php
