@@ -70,10 +70,24 @@ class JC_ProjetLP_Actions {
 
         check_ajax_referer( 'ajax_nonce_security', 'nonce' );
 
+        print_r($_POST);
+
+        $crud = new JC_ProjetLP_crud();
+        $crud->save_validate(
+            $_POST[ "name"],
+            $_POST[ "firstname"],
+            $_POST[ "gender" ],
+            $_POST[ "birthdate" ],
+            $_POST[ "email" ],
+            $_POST[ "country1" ],
+            $_POST[ "country2" ],
+            $_POST[ "country3" ],
+            $_POST[ "country4" ],
+            $_POST[ "country5" ],
+        );
+
         echo "<script id=\"scriptModal\" type=\"text/x-handlebars-template\" src=\"".plugins_url( PROJETLP_PLUGIN_NAME."/assets/js/handlebar/JC_ProjetLP_ConfirmModal.hbs")."\"></script>";
         exit;
-        // $crud = new JC_ProjetLP_crud();
-        // $crud->save_validate();
 
 
     }

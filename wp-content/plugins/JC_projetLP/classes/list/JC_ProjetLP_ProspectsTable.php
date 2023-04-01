@@ -5,9 +5,9 @@ if ( !class_exists( "WP_List_Table" ) ) {
     require_once( ABSPATH . "wp-admin/includes/screen.php" );
 }
 
-class JC_ProjetLP_CountryTable extends WP_List_Table {
+class JC_ProjetLP_ProspectsTable extends WP_List_Table {
 
-    public $_tableName = "jc_country";
+    public $_tableName = "jc_users";
     public $_screen;
 
     public function __construct( ) {
@@ -47,10 +47,8 @@ class JC_ProjetLP_CountryTable extends WP_List_Table {
 
     public function get_columns($columns = array()) {
 
-        $columns[ "ISO" ]           = __( "ISO" );
-        $columns[ "countryNameFR" ] = __( "Nom du pays" );
-        $columns[ "notation" ]      = __( "Notation" );
-        $columns[ "majorOnly" ]     = __( "Uniquement pour les majeurs" );
+        $columns[ "Prospect" ]    = __( "Prospect" );
+        $columns[ "country_id" ]    = __( "ISO Pays" );
 
         global $wpdb;
         $data = $wpdb->prefix . $this->_tableName;
@@ -77,17 +75,15 @@ class JC_ProjetLP_CountryTable extends WP_List_Table {
     {
         global $wpdb;
 
-        $sql = "SELECT DISTINCT `valeur` FROM " . $wpdb->prefix . "jc_country" . " WHERE `valeur` != ''";
+        $sql = "SELECT DISTINCT `valeur` FROM " . $wpdb->prefix . 'jc_users' . " WHERE `valeur` != ''";
 
         $result = $wpdb->get_results($sql, 'ARRAY_A');
 
         foreach ( $result as $value )
             $sortable[ $value[ 'valeur' ] ] = array( $value[ 'valeur' ], true );
 
-        $sortable[ "ISO" ]              = array( 'ISO', true );
-        $sortable[ "countryNameFR" ]    = array( 'countryNameFR', true );
-        $sortable[ "notation" ]         = array( 'notation', true );
-        $sortable[ "majorOnly" ]        = array( 'majorOnly', true );
+        $sortable[ "Prospect" ] = array( 'Prospect', true );
+        $sortable[ "country_id" ] = array( 'country_id', true );
 
         return $sortable;
     }
@@ -103,44 +99,32 @@ class JC_ProjetLP_CountryTable extends WP_List_Table {
 			$sql .= ! empty($_REQUEST['order']) ? ' ' . esc_sql($_REQUEST['order']) : ' ASC';
         }
 
-        $result = $wpdb->get_results($sql, 'ARRAY_A');
+        $result = $wpdb->get_results( $sql, 'ARRAY_A' );
 
         return $result;
 
     }
 
-    // Method for change background color of row if the country is major only
-    public function single_row( $item ) {
-
-        $class = $item['enabled'] == 0 ? 'disabled' : '';
-
-        echo '<tr class="' . $class . '">';
-
-        $this->single_row_columns( $item );
-
-        echo '</tr>';
-
-    }
-
     public function column_default( $item, $column_name ) {
 
-        if(preg_match('/majorOnly/i',$column_name))
-            return sprintf( '<input type="checkbox" name="majorOnly" id="%s" %s>', $item['ISO'], $item['majorOnly'] == 1 ? 'checked' : '' );
 
-        if(preg_match('/notation/i',$column_name))
-            return sprintf( '<select name="notation" id="%s" class="notation">%s</select>', $item['ISO'], $this->getNotation($item['notation']) );
+        switch ( $column_name ) {
+            case 'Prospect': {
 
+                $birthdate = new DateTime($item['birthdate']);
+                $now = new DateTime();
+                $interval = $now->diff($birthdate);
+                $age = $interval->y;
+
+                return ( $item[ "gender" ] == "male" ? "M. " : "Mme " ) . $item['name'] . ' ' . $item['firstname'] . ' (' . $item['email'] . ')' . ' (' . $age . ' ans)';
+            }
+            case 'country_id': {
+                return $item['country_id'];
+            }
+                
+        }
+        
         return @$item[$column_name];
-
-    }
-
-    private function getNotation(int $notation){
-
-        $html = '';
-        for( $i = 0; $i <= 5; $i++ )
-            $html .= sprintf( '<option value="%d" %s>%d</option>', $i, $notation == $i ? 'selected' : '', $i );
-
-        return $html;
 
     }
 

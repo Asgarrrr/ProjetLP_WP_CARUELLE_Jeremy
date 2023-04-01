@@ -150,4 +150,50 @@ class JC_ProjetLP_crud {
 
     }
 
+
+    public function save_validate(
+        $name, $firstname, $gender, $birthdate, $email, $country1, $country2, $country3, $country4, $country5
+    ) {
+
+        echo $name . " " . $firstname . " " . $gender . " " . $birthdate . " " . $email . " " . $country1 . " " . $country2 . " " . $country3 . " " . $country4 . " " . $country5;
+
+        global $wpdb;
+        $tableName = $wpdb->prefix . "jc_users";
+
+        // Make one array with all the countries non empty
+        $countries = array_filter( [ $country1, $country2, $country3, $country4, $country5 ] );
+
+        // Loop through the countries and insert them in the database
+        foreach ( $countries as $country ) {
+
+            print_r( $country );
+
+            $succes = $wpdb->insert(
+                $tableName,
+                array(
+                    'name' => $name,
+                    'firstname' => $firstname,
+                    'gender' => $gender,
+                    'birthdate' => $birthdate,
+                    'email' => $email,
+                    'country_id' => $country,
+                )
+            );
+        }
+
+        return $succes;
+
+    }
+
+    public function get_users() {
+
+        global $wpdb;
+        $tableName = $wpdb->prefix . "jc_users";
+        $sql = "SELECT * FROM `$tableName`;";
+        $result = $wpdb->get_results( $sql, "ARRAY_A" );
+
+        return $result;
+
+    }
+
 }

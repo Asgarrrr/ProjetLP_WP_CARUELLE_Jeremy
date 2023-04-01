@@ -305,6 +305,26 @@ class JC_ProjetLP_Install {
 
         }
 
+        $table_users = $wpdb->prefix . 'jc_users';
+
+        if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_users'" ) != $table_users ) {
+
+            $sql = "CREATE TABLE $table_users (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                name varchar(255) NOT NULL,
+                firstname varchar(255) NOT NULL,
+                email varchar(255) NOT NULL,
+                gender varchar(255) NOT NULL,
+                birthdate date NOT NULL,
+                country_id varchar(3) NOT NULL,
+                PRIMARY KEY (id)
+            );";
+
+            require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+            dbDelta( $sql );
+
+        }
+
         // Check if the page already exists
         $page = get_page_by_path( 'choix-voyage' );
 

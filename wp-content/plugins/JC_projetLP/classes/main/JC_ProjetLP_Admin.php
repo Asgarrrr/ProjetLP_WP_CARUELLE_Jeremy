@@ -47,7 +47,7 @@ class JC_ProjetLP_Admin {
             __( 'Gestion prospects', 'projetlp' ),
             'manage_options',
             'projetlp-liste',
-            array( $this, 'page' )
+            array( $this, 'prospects' )
         );
 
     }
@@ -63,6 +63,14 @@ class JC_ProjetLP_Admin {
     public function page() {
 
         $view = new JC_ProjetLP_CountryListView();
+
+        return false;
+
+    }
+
+    public function prospects() {
+
+        $view = new JC_ProjetLP_Prospects();
 
         return false;
 

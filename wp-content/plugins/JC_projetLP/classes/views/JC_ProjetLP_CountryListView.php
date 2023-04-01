@@ -16,7 +16,7 @@ class JC_ProjetLP_CountryListView {
 
                 <div class="wrap">
                     <form method="post" action="<?= plugins_url( PROJETLP_PLUGIN_NAME.'/classes/export/JC_ProjetLP_ExportXML.php' ); ?>">
-                        <input type="submit" class="button button-primary" value="Export CSV">
+                        <input type="submit" class="button button-primary" value="Export XML">
                     </form>
                 </div>
 
